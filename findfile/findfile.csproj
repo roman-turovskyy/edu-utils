@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArgumentsParser.cs" />
     <Compile Include="FilesCountDictionary.cs" />
     <Compile Include="FileSearcher.cs" />
     <Compile Include="Program.cs" />

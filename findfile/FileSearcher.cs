@@ -7,24 +7,13 @@ namespace findfile
 {
     internal class FileSearcher
     {
-        private readonly ArgumentsParser m_Parser;
         private readonly FilesCountDictionary m_FilesList = new FilesCountDictionary();
 
-        public FileSearcher(ArgumentsParser parser)
+        public IEnumerable<FileAndCount> SearchWithSameNames(string[] directories)
         {
-            if (parser == null) throw new ArgumentNullException("parser");
-            if (parser.HasInvalidArgs) throw new ArgumentNullException(parser.ErrorMessage);
-            if (parser.CompareSize)
-            {
-                throw new NotImplementedException("parser.CompareSize not implemented yet");
-            }
-            m_Parser = parser;
-        }
-
-        public IEnumerable<FileAndCount> SearchWithSameNames()
-        {
+            if (directories == null) throw new ArgumentNullException("directories");
             m_FilesList.Clear();
-            foreach (string dir in m_Parser.Dirs)
+            foreach (string dir in directories)
             {
                 SearchRec(dir);
             }

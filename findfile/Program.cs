@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 
 namespace findfile
@@ -13,17 +14,15 @@ namespace findfile
                 return;
             }
 
-            var parser = new ArgumentsParser(args);
-            if (!parser.ParseArguments())
+            if (!ValidateArguments(args))
             {
-                Console.Error.WriteLine(parser.ErrorMessage);
                 return;
             }
 
             try
             {
-                var searcher = new FileSearcher(parser);
-                var files = searcher.SearchWithSameNames();
+                var searcher = new FileSearcher();
+                var files = searcher.SearchWithSameNames(args);
                 foreach (var fileAndCount in files.OrderByDescending(f => f.Count))
                 {
                     Console.WriteLine("{0}: {1}", fileAndCount.FileName, fileAndCount.Count);
@@ -34,6 +33,20 @@ namespace findfile
                 Console.WriteLine("Oops, error happened!");
                 Console.WriteLine("Dedails: {0}", e.Message);
             }
+        }
+
+        private static bool ValidateArguments(string[] args)
+        {
+            bool ok = true;
+            foreach (var path in args)
+            {
+                if (!Directory.Exists(path))
+                {
+                    Console.WriteLine("Error: directory '{0}' does not exist", path);
+                    ok = false;
+                }
+            }
+            return ok;
         }
 
         private static void Usage()
