@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace findfile
+namespace Eleks.Demo
 {
     public class FilesFinder
     {
@@ -28,6 +28,13 @@ namespace findfile
 
             return GetWithSameNames();
         }
+
+        public IEnumerable<FileAndCount> SearchWithSameNames(string inDirectory)
+        {
+            if (inDirectory == null) throw new ArgumentNullException("inDirectory");
+            return SearchWithSameNames(new[] { inDirectory });
+        }
+
 
         private IEnumerable<FileAndCount> GetWithSameNames()
         {
