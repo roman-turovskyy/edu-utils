@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 
 namespace Eleks.Demo
 {
@@ -12,14 +12,18 @@ namespace Eleks.Demo
 
         private readonly HashSet<string> m_AlreadyVisitedDirs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+        private readonly List<string> m_Errors = new List<string>();
+
         /// <summary>
         /// This method does not traverse same directories twice even if user passes multiple same directories
         /// </summary>
-        public IEnumerable<FileAndCount> SearchWithSameNames(IEnumerable<string> inDirectories)
+        public List<FileAndCount> SearchWithSameNames(params string[] inDirectories)
         {
             if (inDirectories == null) throw new ArgumentNullException("inDirectories");
+
             m_FilesCountMap.Clear();
             m_AlreadyVisitedDirs.Clear();
+            m_Errors.Clear();
 
             foreach (string dir in inDirectories)
             {
@@ -29,40 +33,101 @@ namespace Eleks.Demo
             return GetWithSameNames();
         }
 
-        public IEnumerable<FileAndCount> SearchWithSameNames(string inDirectory)
+        public ReadOnlyCollection<string> GetLastErrors()
         {
-            if (inDirectory == null) throw new ArgumentNullException("inDirectory");
-            return SearchWithSameNames(new[] { inDirectory });
+            return m_Errors.AsReadOnly();
         }
 
-
-        private IEnumerable<FileAndCount> GetWithSameNames()
+        private List<FileAndCount> GetWithSameNames()
         {
-            return m_FilesCountMap
-                .Where(pair => pair.Value > 1)
-                .Select(pair => new FileAndCount(pair.Key, pair.Value));
+            var result = new List<FileAndCount>();
+            foreach (var pair in m_FilesCountMap)
+            {
+                if (pair.Value > 1) result.Add(new FileAndCount(pair.Key, pair.Value));
+            }
+            return result;
         }
 
         private void SearchRec(string dir)
         {
             if (!m_AlreadyVisitedDirs.Add(dir))
             {
-                // such directory was already visited
+                // such directory was already visited. Skip it with subdirs
                 return;
             }
 
-            string[] files = Directory.GetFiles(dir);
+            if (!Directory.Exists(dir))
+            {
+                RegisterError(string.Format("Directory '{0}' not found", dir));
+                return;
+            }
+
+            string[] files = GetFilesSafe(dir);
             foreach (var fullFileName in files)
             {
                 string fileName = Path.GetFileName(fullFileName);
                 AddFile(fileName);
             }
 
-            string[] subdirs = Directory.GetDirectories(dir);
+            string[] subdirs = GetSubDirectoriesSafe(dir);
             foreach (var sub in subdirs)
             {
                 SearchRec(sub);
             }
+        }
+
+        private string[] GetFilesSafe(string dir)
+        {
+            var files = new string[0];
+            try
+            {
+                files = Directory.GetFiles(dir);
+            }
+            catch(DirectoryNotFoundException e)
+            {
+                RegisterError(e);
+            }
+            catch(UnauthorizedAccessException e)
+            {
+                RegisterError(e);
+            }
+            catch (IOException e)
+            {
+                RegisterError(e);
+            }
+            return files;
+        }
+
+        private void RegisterError(Exception ex)
+        {
+            RegisterError(ex.Message);
+        }
+
+        private void RegisterError(string errMsg)
+        {
+            m_Errors.Add(errMsg);
+        }
+
+        private string[] GetSubDirectoriesSafe(string dir)
+        {
+            var subDirs = new string[0];
+            try
+            {
+                subDirs = Directory.GetDirectories(dir);
+            }
+            catch (DirectoryNotFoundException e)
+            {
+                RegisterError(e);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                RegisterError(e);
+            }
+            catch (IOException e)
+            {
+                RegisterError(e);
+            }
+            return subDirs;
         }
 
         private void AddFile(string fileName)

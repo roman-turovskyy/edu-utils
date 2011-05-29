@@ -52,6 +52,18 @@
       <Name>FindFile</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TestDir\Empty\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestDir\HasFilesWithSameNameDiffCase\a.txt" />
+    <Content Include="TestDir\HasFilesWithSameNameDiffCase\SubDir\A.txt" />
+    <Content Include="TestDir\HasFilesWithSameName\a.txt" />
+    <Content Include="TestDir\HasFilesWithSameName\b.txt" />
+    <Content Include="TestDir\HasFilesWithSameName\SubDir\a.txt" />
+    <Content Include="TestDir\NoFilesWithSameName\a.txt" />
+    <Content Include="TestDir\NoFilesWithSameName\b.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

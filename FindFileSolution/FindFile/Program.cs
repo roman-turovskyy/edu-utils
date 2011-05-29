@@ -32,13 +32,22 @@ namespace Eleks.Demo
             return 0;
         }
 
-        private static void DoSearch(IEnumerable<string> args)
+        private static void DoSearch(string[] args)
         {
             var filesFinder = new FilesFinder();
             var filesWithSameName = filesFinder.SearchWithSameNames(args);
             foreach (var fileAndCount in filesWithSameName)
             {
                 Console.WriteLine("{0}: {1}", fileAndCount.FileName, fileAndCount.Count);
+            }
+            var errorsList = filesFinder.GetLastErrors();
+            if (errorsList.Count > 0)
+            {
+                Console.Error.WriteLine("* Errors:");
+                foreach (var err in errorsList)
+                {
+                    Console.WriteLine("* {0}", err);
+                }
             }
         }
 
@@ -61,7 +70,9 @@ namespace Eleks.Demo
             Console.WriteLine(@"
 Use findfile to find files with the same name in different directories
 Usage:
-> findfile path1 [path2] [path3] [pathN]");
+> findfile path1 [path2] [path3] [pathN]
+Example:
+> findfile D:\tmp ""C:\Program Files\Windows NT""");
         }
     }
 }
