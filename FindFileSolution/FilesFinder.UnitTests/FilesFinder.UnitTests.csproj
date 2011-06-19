@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B4C8D375-9F57-4C42-A0F8-C9984757FC14}</ProjectGuid>
+    <ProjectGuid>{1AEA01A9-5A60-44D0-8E90-F9AB08693F3F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Eleks.Demo.Tests</RootNamespace>
-    <AssemblyName>FindFile.Tests</AssemblyName>
+    <RootNamespace>Eleks.Demo.UnitTests</RootNamespace>
+    <AssemblyName>FilesFinder.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\vendor\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\vendor\nunit.framework.dll</HintPath>
     </Reference>
@@ -43,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssertExtensions.cs" />
     <Compile Include="FilesFinderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -51,18 +55,6 @@
       <Project>{406E5BBC-54CB-49C7-8BBF-FA3B0A901E4D}</Project>
       <Name>FindFile</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TestDir\Empty\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TestDir\HasFilesWithSameNameDiffCase\a.txt" />
-    <Content Include="TestDir\HasFilesWithSameNameDiffCase\SubDir\A.txt" />
-    <Content Include="TestDir\HasFilesWithSameName\a.txt" />
-    <Content Include="TestDir\HasFilesWithSameName\b.txt" />
-    <Content Include="TestDir\HasFilesWithSameName\SubDir\a.txt" />
-    <Content Include="TestDir\NoFilesWithSameName\a.txt" />
-    <Content Include="TestDir\NoFilesWithSameName\b.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

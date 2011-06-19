@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
-using Eleks.Demo;
 using NUnit.Framework;
 
-namespace FindFile.Tests
+namespace Eleks.Demo.Tests
 {
     [TestFixture]
     public class FilesFinderTests

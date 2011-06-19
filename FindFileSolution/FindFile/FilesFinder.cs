@@ -14,6 +14,18 @@ namespace Eleks.Demo
 
         private readonly List<string> m_Errors = new List<string>();
 
+        private IDirService m_DirService;
+
+        public FilesFinder(IDirService dirService)
+        {
+            if (dirService == null) throw new ArgumentNullException("dirService");
+            m_DirService = dirService;
+        }
+
+        public FilesFinder() : this(new OsDirService())
+        {
+        }
+
         /// <summary>
         /// This method does not traverse same directories twice even if user passes multiple same directories
         /// </summary>
@@ -56,7 +68,7 @@ namespace Eleks.Demo
                 return;
             }
 
-            if (!Directory.Exists(dir))
+            if (!m_DirService.DirectoryExists(dir))
             {
                 RegisterError(string.Format("Directory '{0}' not found", dir));
                 return;
@@ -81,7 +93,7 @@ namespace Eleks.Demo
             var files = new string[0];
             try
             {
-                files = Directory.GetFiles(dir);
+                files = m_DirService.GetFiles(dir);
             }
             catch(DirectoryNotFoundException e)
             {
@@ -113,7 +125,7 @@ namespace Eleks.Demo
             var subDirs = new string[0];
             try
             {
-                subDirs = Directory.GetDirectories(dir);
+                subDirs = m_DirService.GetDirectories(dir);
             }
             catch (DirectoryNotFoundException e)
             {
