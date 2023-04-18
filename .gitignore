@@ -4,3 +4,4 @@ obj
 *.suo
 *.pdb
 _ReSharper.*
+.vs
